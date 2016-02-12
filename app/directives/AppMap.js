@@ -17,23 +17,21 @@ module.exports = function() {
 
             if (scope.center) options.center = getLocation(scope.center);
 
-            // create the map
             map = new google.maps.Map(element[0], options);
+
+            // @todo finalise markers :( not ready for demo
+            scope.$watch("markers", function (newMarkers, oldMarkers) {
+                angular.forEach(newMarkers, function(marker, key){
+                    var loc = new google.maps.LatLng(marker.lat, marker.lon);
+                    var mm = new google.maps.Marker({ position: loc, map: map, title: marker.name });
+                });
+            });
 
             function getLocation(loc) {
                 if (loc == null) return new google.maps.LatLng(40, -73);
                 if (angular.isString(loc)) loc = scope.$eval(loc);
                 return new google.maps.LatLng(loc.lat, loc.lon);
             }
-
-            // @todo finalise markers :( not ready for demo
-            scope.$watch("markers", function (newValue, old) {
-                if (newValue.length > 0) {
-                    var loc = new google.maps.LatLng(newValue[0].lat, newValue[0].lon);
-                    var mm = new google.maps.Marker({ position: loc, map: map, title: newValue[0].name });
-                }
-            });
-
         }
     };
 }
