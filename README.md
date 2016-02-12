@@ -8,5 +8,11 @@
 ## Téléchargements des dependencies
 - `npm install`
 
+## get weather api key from
+- http://api.openweathermap.org
+
+## get login and api key from citysearch
+-http://www.citysearch-api.com
+
 ## Exécutions des tâches automatisées
 - `gulp`
