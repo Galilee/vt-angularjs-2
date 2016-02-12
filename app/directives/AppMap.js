@@ -29,8 +29,6 @@ module.exports = function() {
             // @todo finalise markers :( not ready for demo
             scope.$watch("markers", function (newValue, old) {
                 if (newValue.length > 0) {
-                    console.log(newValue);
-                    console.log(newValue);
                     var loc = new google.maps.LatLng(newValue[0].lat, newValue[0].lon);
                     var mm = new google.maps.Marker({ position: loc, map: map, title: newValue[0].name });
                 }
