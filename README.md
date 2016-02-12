@@ -8,10 +8,10 @@
 ## Téléchargements des dependencies
 - `npm install`
 
-## get weather api key from
+## Météo clé api
 - http://api.openweathermap.org
 
-## get login and api key from citysearch
+## citysearch clé api
 - http://www.citysearch-api.com
 
 ## Exécutions des tâches automatisées
