@@ -1,10 +1,14 @@
 module.exports = function() {
-    this.value = 'my default value';
-    this.setValue = function(value) {
-        this.value = value;
+    var value = 'my default value';
+    this.setValue = function(newValue) {
+        value = newValue;
     };
 
     this.$get = function() {
-        return this.value;
+        return {
+                getValue: function() {
+                    return value;
+            }
+        }
     }
 }

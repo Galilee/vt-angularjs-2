@@ -1,7 +1,9 @@
 require('angular');
 
-angular.module('app').config(function($stateProvider, $urlRouterProvider, MyProviderProvider) {
-    MyProviderProvider.setValue('My custom value');
+angular.module('app').config(function($stateProvider, $urlRouterProvider, MyProviderProvider, APP_VERSION) {
+    //custom provider config
+    MyProviderProvider.setValue(APP_VERSION);
+
     $urlRouterProvider.otherwise('/home');
     $stateProvider
         .state('home', {
@@ -13,5 +15,10 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider, MyProv
             url:'/weather/:city',
             templateUrl: 'views/weather.html',
             controller: 'WeatherCtrl'
+        })
+        .state('examples', {
+            url:'/examples',
+            templateUrl: 'views/examples.html',
+            controller: 'ExamplesCtrl'
         })
 }).run();

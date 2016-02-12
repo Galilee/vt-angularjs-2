@@ -26,8 +26,10 @@ require('./directives');
 },{"./config":2,"./controllers":6,"./directives":8,"./parameters":9,"./services":15,"angular":18,"angular-ui-router":16}],2:[function(require,module,exports){
 require('angular');
 
-angular.module('app').config(function($stateProvider, $urlRouterProvider, MyProviderProvider) {
-    MyProviderProvider.setValue('My custom value');
+angular.module('app').config(function($stateProvider, $urlRouterProvider, MyProviderProvider, APP_VERSION) {
+    //custom provider config
+    MyProviderProvider.setValue(APP_VERSION);
+
     $urlRouterProvider.otherwise('/home');
     $stateProvider
         .state('home', {
@@ -40,16 +42,20 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider, MyProv
             templateUrl: 'views/weather.html',
             controller: 'WeatherCtrl'
         })
+        .state('examples', {
+            url:'/examples',
+            templateUrl: 'views/examples.html',
+            controller: 'ExamplesCtrl'
+        })
 }).run();
 },{"angular":18}],3:[function(require,module,exports){
-module.exports = function($scope, $state) {
-    $scope.query = "";
-    $scope.searchAction = function(){
-        console.log('ici');
-        $state.go("/search/" + $scope.query);
-    }
+module.exports = function($scope, MyProvider, MyService, MyFactory) {
 
+    $scope.serviceValue = MyService.getValue();
+    $scope.factoryValue = MyFactory.getValue();
+    $scope.providerValue = MyProvider.getValue();
 }
+
 },{}],4:[function(require,module,exports){
 module.exports = function($scope, $stateParams, CityService) {
     $scope.query = "";
@@ -82,9 +88,9 @@ require('angular');
 module.exports = angular.module('app')
     .controller('HomeCtrl', require('./HomeCtrl'))
     .controller('WeatherCtrl', require('./WeatherCtrl'))
-    .controller('HeaderCtrl', require('./HeaderCtrl'));
+    .controller('ExamplesCtrl', require('./ExamplesCtrl'));
 
-},{"./HeaderCtrl":3,"./HomeCtrl":4,"./WeatherCtrl":5,"angular":18}],7:[function(require,module,exports){
+},{"./ExamplesCtrl":3,"./HomeCtrl":4,"./WeatherCtrl":5,"angular":18}],7:[function(require,module,exports){
 module.exports = function() {
     return {
 
@@ -106,7 +112,8 @@ module.exports =
         .constant("API_WEATHER_KEY", "d7d802efaa317a35c426100c8535c7f4")
         .constant("API_CITY_HOST", "http://www.citysearch-api.com/fr/city")
         .constant("API_CITY_KEY", "so26789c276801562eda64badc80e319ebb67e58c2")
-        .constant("API_CITY_LOGIN", "tarek-rjili");
+        .constant("API_CITY_LOGIN", "tarek-rjili")
+        .constant("APP_VERSION", "0.xx-dev");
 
 },{"angular":18}],10:[function(require,module,exports){
 
@@ -127,13 +134,17 @@ module.exports = function () {
 }
 },{}],12:[function(require,module,exports){
 module.exports = function() {
-    this.value = 'my default value';
-    this.setValue = function(value) {
-        this.value = value;
+    var value = 'my default value';
+    this.setValue = function(newValue) {
+        value = newValue;
     };
 
     this.$get = function() {
-        return this.value;
+        return {
+                getValue: function() {
+                    return value;
+            }
+        }
     }
 }
 },{}],13:[function(require,module,exports){
