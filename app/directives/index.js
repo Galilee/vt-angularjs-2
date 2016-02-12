@@ -1,6 +1,6 @@
 require('angular');
 
-module.exports = function() {
-    angular.modules('app.directives', [])
-        .directive('MyDirective', require('./MyDirective'))
-}
+module.exports =
+    angular.module('app')
+        .directive('myDirective', require('./MyDirective'))
+        .directive('appMap', require('./AppMap'));

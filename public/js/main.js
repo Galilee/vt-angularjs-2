@@ -23,7 +23,7 @@ require('./directives');
 
 
 
-},{"./config":2,"./controllers":6,"./directives":8,"./parameters":9,"./services":15,"angular":18,"angular-ui-router":16}],2:[function(require,module,exports){
+},{"./config":2,"./controllers":6,"./directives":9,"./parameters":10,"./services":16,"angular":19,"angular-ui-router":17}],2:[function(require,module,exports){
 require('angular');
 
 angular.module('app').config(function($stateProvider, $urlRouterProvider, MyProviderProvider, APP_VERSION) {
@@ -48,7 +48,7 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider, MyProv
             controller: 'ExamplesCtrl'
         })
 }).run();
-},{"angular":18}],3:[function(require,module,exports){
+},{"angular":19}],3:[function(require,module,exports){
 module.exports = function($scope, MyProvider, MyService, MyFactory) {
 
     $scope.serviceValue = MyService.getValue();
@@ -71,15 +71,25 @@ module.exports = function($scope, $stateParams, CityService) {
 }
 },{}],5:[function(require,module,exports){
 module.exports = function($scope, $stateParams, WeatherService) {
-    var city = $stateParams.city;
+    var cityName = $stateParams.city;
     $scope.loading = true;
+    $scope.markers = [];
     $scope.infoWeather = function(){
-        WeatherService.info(city).success(function(data){
+        WeatherService.info(cityName).success(function(city){
             $scope.loading = false;
-            $scope.city = data;
+            $scope.markers.push({
+                name: city.name,
+                lat : city.coord.lat,
+                lon : city.coord.lon
+            });
+            $scope.city = city;
         })
     }
     $scope.infoWeather();
+
+    // current location
+    $scope.loc = { lat: 46.2157467, lon: 2.2088257 };
+
 }
 
 },{}],6:[function(require,module,exports){
@@ -90,20 +100,64 @@ module.exports = angular.module('app')
     .controller('WeatherCtrl', require('./WeatherCtrl'))
     .controller('ExamplesCtrl', require('./ExamplesCtrl'));
 
-},{"./ExamplesCtrl":3,"./HomeCtrl":4,"./WeatherCtrl":5,"angular":18}],7:[function(require,module,exports){
+},{"./ExamplesCtrl":3,"./HomeCtrl":4,"./WeatherCtrl":5,"angular":19}],7:[function(require,module,exports){
+module.exports = function() {
+    return {
+        restrict: "E",
+        replace: true,
+        template: "<div></div>",
+        scope: {
+            center: "=",
+            markers: "="
+        },
+        link: function (scope, element, attrs) {
+
+            var options = {
+                center: new google.maps.LatLng(40, -73),
+                zoom: 6,
+                mapTypeId: "roadmap"
+            };
+
+            if (scope.center) options.center = getLocation(scope.center);
+
+            // create the map
+            map = new google.maps.Map(element[0], options);
+
+            function getLocation(loc) {
+                if (loc == null) return new google.maps.LatLng(40, -73);
+                if (angular.isString(loc)) loc = scope.$eval(loc);
+                return new google.maps.LatLng(loc.lat, loc.lon);
+            }
+
+            // @todo finalise markers :( not ready for demo
+            scope.$watch("markers", function (newValue, old) {
+                if (newValue.length > 0) {
+                    console.log(newValue);
+                    console.log(newValue);
+                    var loc = new google.maps.LatLng(newValue[0].lat, newValue[0].lon);
+                    var mm = new google.maps.Marker({ position: loc, map: map, title: newValue[0].name });
+                }
+            });
+
+        }
+    };
+}
+
+},{}],8:[function(require,module,exports){
 module.exports = function() {
     return {
 
     }
 }
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 require('angular');
 
-module.exports = function() {
-    angular.modules('app.directives', [])
-        .directive('MyDirective', require('./MyDirective'))
-}
-},{"./MyDirective":7,"angular":18}],9:[function(require,module,exports){
+module.exports =
+    angular.module('app')
+        .directive('myDirective', require('./MyDirective'))
+        .directive('appMap', require('./AppMap'));
+
+},{"./AppMap":7,"./MyDirective":8,"angular":19}],10:[function(require,module,exports){
 require('angular');
 
 module.exports =
@@ -115,7 +169,7 @@ module.exports =
         .constant("API_CITY_LOGIN", "tarek-rjili")
         .constant("APP_VERSION", "0.xx-dev");
 
-},{"angular":18}],10:[function(require,module,exports){
+},{"angular":19}],11:[function(require,module,exports){
 
 module.exports = function ($http, API_CITY_HOST, API_CITY_KEY, API_CITY_LOGIN) {
     return{
@@ -124,7 +178,7 @@ module.exports = function ($http, API_CITY_HOST, API_CITY_KEY, API_CITY_LOGIN) {
         }
     }
 }
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = function () {
     return {
         getValue: function() {
@@ -132,7 +186,7 @@ module.exports = function () {
         }
     }
 }
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = function() {
     var value = 'my default value';
     this.setValue = function(newValue) {
@@ -147,13 +201,13 @@ module.exports = function() {
         }
     }
 }
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 module.exports = function() {
     this.getValue = function() {
         return "my value";
     }
 }
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 
 module.exports = function ($http, API_WEATHER_HOST, API_WEATHER_KEY) {
     return{
@@ -162,7 +216,7 @@ module.exports = function ($http, API_WEATHER_HOST, API_WEATHER_KEY) {
         }
     }
 }
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 require('angular');
 
 module.exports =
@@ -173,7 +227,7 @@ module.exports =
         .factory('WeatherService', require('./WeatherService'))
         .factory('CityService', require('./CityService'));
 
-},{"./CityService":10,"./MyFactory":11,"./MyProvider":12,"./MyService":13,"./WeatherService":14,"angular":18}],16:[function(require,module,exports){
+},{"./CityService":11,"./MyFactory":12,"./MyProvider":13,"./MyService":14,"./WeatherService":15,"angular":19}],17:[function(require,module,exports){
 /**
  * State-based routing for AngularJS
  * @version v0.2.18
@@ -4713,7 +4767,7 @@ angular.module('ui.router.state')
   .filter('isState', $IsStateFilter)
   .filter('includedByState', $IncludedByStateFilter);
 })(window, window.angular);
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * @license AngularJS v1.5.0
  * (c) 2010-2016 Google, Inc. http://angularjs.org
@@ -35142,8 +35196,8 @@ $provide.value("$locale", {
 })(window, document);
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 require('./angular');
 module.exports = angular;
 
-},{"./angular":17}]},{},[1]);
+},{"./angular":18}]},{},[1]);
