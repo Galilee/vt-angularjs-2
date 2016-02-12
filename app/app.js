@@ -6,6 +6,9 @@ var app = angular.module('app', ['ui.router']);
 // load config
 require('./config');
 
+// load parameters
+require('./parameters');
+
 // load controllers
 require('./controllers');
 
@@ -14,5 +17,7 @@ require('./services');
 
 // directives
 require('./directives');
+
+
 
 

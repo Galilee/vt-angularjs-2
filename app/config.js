@@ -6,6 +6,12 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider, MyProv
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: 'views/home.html'
+            templateUrl: 'views/home.html',
+            controller: 'HomeCtrl'
+        })
+        .state('weather', {
+            url:'/weather/:city',
+            templateUrl: 'views/weather.html',
+            controller: 'WeatherCtrl'
         })
 }).run();
