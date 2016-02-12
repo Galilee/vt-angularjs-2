@@ -12,7 +12,7 @@
 - http://api.openweathermap.org
 
 ## get login and api key from citysearch
--http://www.citysearch-api.com
+- http://www.citysearch-api.com
 
 ## Exécutions des tâches automatisées
 - `gulp`
