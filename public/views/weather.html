@@ -1,8 +1,6 @@
 <div class="city_detail">
-
+    <a href="#/weather" class="pull-right"><span class="glyphicon glyphicon-search"></span></a>
     <div class="row">
-        <a href="#/weather" class="pull-right"><span class="glyphicon glyphicon-search"></span></a>
-        <br><br>
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <h3 class="panel-title">{{city.name}}  <i class="wi wi-day-lightning"></i></h3>
@@ -31,10 +29,6 @@
                 </div>
             </div>
         <!-- map -->
-        <app-map style="height:400px;margin:12px;box-shadow:0 3px 25px black;"
-                 center="loc"
-                 markers="markers"
-                >
-        </app-map>
+        <app-map center="loc" markers="markers"></app-map>
     </div>
 </div>

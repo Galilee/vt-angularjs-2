@@ -2,7 +2,7 @@ module.exports = function() {
     return {
         restrict: "E",
         replace: true,
-        template: "<div></div>",
+        template: "<div id='map'></div>",
         scope: {
             center: "=",
             markers: "="
@@ -23,7 +23,7 @@ module.exports = function() {
             scope.$watch("markers", function (newMarkers, oldMarkers) {
                 angular.forEach(newMarkers, function(marker, key){
                     var loc = new google.maps.LatLng(marker.lat, marker.lon);
-                    var mm = new google.maps.Marker({ position: loc, map: map, title: marker.name });
+                    var marker = new google.maps.Marker({ position: loc, map: map, title: marker.name });
                 });
             });
 
