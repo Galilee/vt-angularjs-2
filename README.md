@@ -11,7 +11,7 @@
 ## Météo clé api
 - http://api.openweathermap.org
 
-## citysearch clé api
+## Citysearch clé api
 - http://www.citysearch-api.com
 
 ## Exécutions des tâches automatisées
